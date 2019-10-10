@@ -1,6 +1,9 @@
 # test-restit
 Test evaluacion
 
+//Install dependencies in app and server
+npm install
+
 //Run server
 npm run dev
 
