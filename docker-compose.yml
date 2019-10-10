@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: database_mysql
+    build: ./db
+    environment:
+      MYSQL_DATABASE: resit
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+      DATABASE_HOST: db
+    ports:
+      - "42333:3306"
+  server:
+    container_name: server-rest-it
+    build: ./server
+    command: npm run dev
+    environment:
+      DATABASE_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: resit
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - "./server:/srv/app/server"
+      - "/srv/app/server/node_modules"
+  resit:
+    container_name: restit
+    restart: always
+    build:
+      context: ./resit
+      dockerfile: Dockerfile
+    volumes:
+      - "./restit:/srv/app/client"
+      - "/srv/app/client/node_modules"
+    ports:
+      - "3000:3000"
